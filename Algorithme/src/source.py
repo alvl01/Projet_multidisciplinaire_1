@@ -47,6 +47,8 @@ def exec_simple_command(cmd, cmd_i):
         cmd.fbuton_onclick()
     elif (cmd_i == 10):
         cmd.fbrosse_detect()
+    elif (cmd_i == 11):
+        cmd.fwait()
     cmd.negation = 0
 
 def error_music():

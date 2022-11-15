@@ -8,6 +8,7 @@ class Command():
     _music = 0
     _buton_onclick = 0
     _brosse_detected = 0
+    _brosse_in_hand = 1
     _last_command = []
 
     # NEGATION
@@ -73,6 +74,13 @@ class Command():
     @brosse_detected.setter
     def brosse_detected(self, value):
         self._brosse_detected = value
+    # BROSSE IN HAND
+    @property
+    def brosse_in_hand(self):
+        return self._brosse_in_hand
+    @brosse_in_hand.setter
+    def brosse_detected(self, value):
+        self._brosse_in_hand = value
     # LAST COMMAND
     @property
     def last_command(self):
@@ -117,3 +125,9 @@ class Command():
     def fbrosse_detect(self):
         print("brosse_detect : {0}".format(self.negation))
         self.last_command = [10, self.negation]
+    def fwait(self):
+        print("wait")
+        self.last_command = [11, self.negation]
+    def fbrosse_in_hand(self):
+        print("brosse in hand")
+        self.last_command = [12, self.negation]

@@ -18,6 +18,8 @@ def create_sensor(nb):
     return c
 with open("code.crickit") as f:
         for line in f:
+            line = line[: line.find("#")].strip()
+            print(line)
             indice = 0
             indice_start = 0
             for i in line:
@@ -30,10 +32,11 @@ with open("code.crickit") as f:
                     break
                 indice += 1
                 if i == " ":
-                    if line[indice_start:indice] != "   " and line[indice_start:indice] != " ":
+                    if line[indice_start:indice] != "   " and line[indice_start:indice] != " " and line[indice_start:indice]:
                         command.append(line[indice_start:indice].strip())
                         indice_start = indice
 command_nbr = []
+print(command)
 for cmd in command:
     if (cmd == "if"):
         command_nbr.append(0)

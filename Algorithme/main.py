@@ -20,9 +20,12 @@ sensor.gain = 4
 def main():
     while True:
         try:
-            if (ss.analog_read(pot) < 100):
-                print("hello")
-                prog.interpret_program(sensor)
+            if fork():
+                if (ss.analog_read(pot) < 100):
+                    print("hello")
+                    prog.interpret_program(sensor)
+            else:
+                prog.do_in_parallele()
         except 1:
             src.error_music()
 

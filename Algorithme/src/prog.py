@@ -25,7 +25,7 @@ def Boolean_find(cmd, sensor):
     boolean = 0
     count = 0
     liste = []
-    command = read_program(sensor)
+    command = read_program(sensor, cmd)
     count += 1
     while command != 26:
         if command == 15:
@@ -34,14 +34,18 @@ def Boolean_find(cmd, sensor):
             or_ = 1
         elif command == 5:
              neg = 1
-        elif((command == 2 and cmd._brosse_in == 0) or (command == 3 and cmd._eject_dentifrisse) or (command == 4 and cmd._lumiere) or (command == 6 and cmd._pouce) or (command == 7 and cmd._timer) or (command == 8 and cmd._music)or (command == 9 and cmd._buton_onclick) or (command == 10 and cmd._brosse_detected) or command == 11):
+        elif((command == 2 and cmd.var[1] == 0) or command == 11):
+             boolean = 1
+             liste.append((neg + boolean) % 2)
+             neg = 0
+        elif(cmd.get_var(command - 1)):
              boolean = 1
              liste.append((neg + boolean) % 2)
              neg = 0
         else:
             liste.append((neg + boolean) % 2)
             neg = 0
-        command = read_program(sensor)
+        command = read_program(sensor, cmd)
         count += 1
     return_value = 0
     if and_:
@@ -60,27 +64,8 @@ def Boolean_find(cmd, sensor):
         else:
             return_value = el
     return return_value, count
-def get_cmd(sensor):
-    cmd = []
-    colors = sc.get_color(sensor)
-    while len(cmd) < 3:
-        # tant qu'il n'y a pas de code de sortie c'est a dire 1,1,1,1
-        # quel couleur
-        while colors == "white":
-            # quand on arrive sur du blanc
-            colors = sc.get_color(sensor)  # recupère les couleurs
-        # on est plus sur du blanc
-        if colors == "red":
-            cmd.append(0)
-        elif colors == "green":  # si c'est rouge
-            cmd.append(1)  # ajoute 0 a la liste
-        elif colors == "blue":  # si c'est bleu
-            cmd.append(2)  # ajoute 1 a la liste
-        while colors == "red" or colors == "blue" or colors == "green":  # tant qu'on a pas changé de case
-            colors = sc.get_color(sensor)  # recupère les couleurs
-        # on est plus sur de la couleur
-    return cmd
-def read_program(sensor, sens=1):
+
+def read_program(sensor, cmd, sens=1):
     """
     algorithme permetant de lire la bande
     retourne une liste de 0 et de 1
@@ -98,33 +83,31 @@ def read_program(sensor, sens=1):
     elif len(Buffer_[indice:]) > 0:
         return_value = Buffer_[indice]
         indice += 1
+        #print(return_value)
         return return_value
-
     # SI BUFFER EST VIDE
     sc.motor12(1)
-    Buffer_ = [[3,0,0]]
+    Buffer_ = [50]
     if_while = 1
-    while ((not sc.code_exit(Buffer_[len(Buffer_)-1])) and len(Buffer_) * if_while < BUFFERSIZE):
-        if Buffer_[0][0] == 3:
+    while ((not sc.code_exit(cmd, Buffer_[-1])) and len(Buffer_) * if_while < BUFFERSIZE):
+        if Buffer_[0] == 50:
             Buffer_ = []
-        cmd = get_cmd(sensor)
-        Buffer_.append(sc.format_command(cmd))
-        if Buffer_[len(Buffer_)-1] == 0 or 1:
+        Buffer_.append(sc.get_cmd(sensor))
+        if Buffer_[-1] <= 1:
             if_while = -1
     indice = 0
     sc.motor12(0)  # arrete les moteurs
     ######################
+    return read_program(sensor, cmd)
 
-    return read_program(sensor)
-
-def back(sensor, count):
+def back(sensor, cmd, count):
     while count > 2:
          count -= 1
-         Buffer_ = read_program(sensor, -1)
+         Buffer_ = read_program(sensor, cmd, -1)
     del Buffer_
 
-def skip(sensor):
-    command = read_program(sensor)
+def skip(sensor, cmd):
+    command = read_program(sensor, cmd)
     count = 1
     count_end = 1
     while count_end > 0:
@@ -133,8 +116,8 @@ def skip(sensor):
             count_end -= 1
         elif command == 0 or command == 1:
             count_end += 2
-        command = read_program(sensor)
-    command = read_program(sensor, -1)
+        command = read_program(sensor, cmd)
+    command = read_program(sensor, cmd, -1)
     return count - 1
 def buffer_again():
     global Buffer_
@@ -150,7 +133,7 @@ def interpret_program(cmd, sensor):
     il exectute par récursivité l'intérieur
     """
     print("open")
-    command = read_program(sensor)
+    command = read_program(sensor, cmd)
     count = 1
     while_count = 0
     while command != 26:
@@ -159,19 +142,19 @@ def interpret_program(cmd, sensor):
             if (verif):
                 count += interpret_program(cmd, sensor)
             else:
-               count += skip(sensor)
+               count += skip(sensor, cmd)
          elif command == 1:
             verif, count_bool = Boolean_find(cmd, sensor)
             count += count_bool
             while (verif):
                 while_count = interpret_program(cmd, sensor)
-                back(sensor, while_count + count_bool)
+                back(sensor, cmd, while_count + count_bool)
                 verif, count_bool = Boolean_find(cmd, sensor)
-            count += skip(sensor)
+            count += skip(sensor, cmd)
          else:
             count += 1
             sc.exec_simple_command(cmd, command)
          count += 1
-         command = read_program(sensor)
+         command = read_program(sensor, cmd)
     print("close")
     return count

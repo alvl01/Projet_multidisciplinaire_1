@@ -42,7 +42,7 @@ class TestProg(unittest.TestCase):
             cmd = Command();
             test[0] = i
             test_1 = create_sensor(test)
-            a = prog.read_program(test_1)
+            a = prog.read_program(test_1, cmd)
             prog.sc.test_again()
             prog.buffer_again()
             del cmd

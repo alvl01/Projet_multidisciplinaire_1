@@ -12,30 +12,27 @@ def format_command(liste: any):
     n += 3 * liste[1] + 9 * liste[2]
     return n
 
-def code_exit(liste):
+def code_exit(cmd, el):
     """
-    Retourne un TRUE ou FALSE en fonction de si le code 1 1 1 1 est lu par la machine
-    de turing
+    Retourne un TRUE ou FALSE en fonction de el
     """
-    i = len(liste) - 1  # longeur de la liste - 1
-    end = 0
-    if_while = 0
-    for el in liste:
-        if el <= 1:
-            if_while += 1
-        elif el == 26:
-            end += 1
-    end -= 2 * if_while
-    if end >= 0:
-        return 1
-    return 0
+    if cmd.var[10] == 1 and el <= 1:
+        cmd.var[10] += 1
+    elif el <= 1:
+        cmd.var[10] += 2
+    elif el == 26:
+        cmd.var[10] -= 1
+    if cmd.var[10] > 0:
+        return 0
+    cmd.var[10] = 1
+    return 1
 
 def exec_simple_command(cmd, cmd_i):
     """
     execute une commande sans boucle sans condition
     """
     if (cmd_i == 5):
-        cmd.negation = 1
+        cmd.var[0] = 1
         return
     if (cmd_i == 2):
         cmd.fbrosse_out()
@@ -55,7 +52,27 @@ def exec_simple_command(cmd, cmd_i):
         cmd.fbrosse_detect()
     elif (cmd_i == 11):
         cmd.fwait()
-    cmd.negation = 0
+    cmd.var[0] = 0
+
+def get_cmd(sensor):
+    cmd = []
+    colors = get_color(sensor)
+    while len(cmd) < 3:
+        while colors == "white": # tant qu on est sur du blanc
+            colors = get_color(sensor)  # recupère les couleurs
+        # on est plus sur du blanc
+        if colors == "red":
+            cmd.append(0)
+        elif colors == "green":
+            cmd.append(1)
+        elif colors == "blue":
+            cmd.append(2)
+        while colors == "red" or colors == "blue" or colors == "green":  # tant qu'on est sur du blanc
+            colors = get_color(sensor)  # recupère les couleurs
+        # on est plus sur de la couleur
+    command = format_command(cmd)
+    del cmd
+    return command
 
 def error_music():
 	###

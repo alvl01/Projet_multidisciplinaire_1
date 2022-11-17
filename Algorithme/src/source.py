@@ -18,10 +18,16 @@ def code_exit(liste):
     de turing
     """
     i = len(liste) - 1  # longeur de la liste - 1
-    if (i >= 2):  # si il y a 4 éléments dans la liste
-        if (liste[i] == 2 and liste[i - 1] == 2 and liste[i - 2] == 2):
-            # 1 == TRUE and 0 == FALSE ex: liste[1] = 1 = TRUE
-            return 1
+    end = 0
+    if_while = 0
+    for el in liste:
+        if el <= 1:
+            if_while += 1
+        elif el == 26:
+            end += 1
+    end -= 2 * if_while
+    if end >= 0:
+        return 1
     return 0
 
 def exec_simple_command(cmd, cmd_i):

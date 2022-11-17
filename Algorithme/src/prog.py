@@ -2,8 +2,9 @@ import time
 import source as sc
 from command import Command
 
-BUFFERSIZE = 7
+indice = 7
 Buffer_ = []
+BUFFERSIZE = 7
 
 def error_music():
     ###
@@ -84,26 +85,37 @@ def read_program(sensor, sens=1):
     algorithme permetant de lire la bande
     retourne une liste de 0 et de 1
     """
-    global BUFFERSIZE, Buffer_
-    sc.motor12(1*sens)
-    if (sens == -1):
-        Buffer_ = []
-        get_cmd(sensor)
-        return 0
-    if len(Buffer_) > 0:
-        return_value = sc.format_command(Buffer_[0])
-        Buffer_ = Buffer_[1:len(Buffer_)]
+    global indice, Buffer_, BUFFERSIZE
+
+    # ERROR ON ESSAYE DE RECULER ALORS QUE LA LISTE EST VIDE
+    if (sens == -1 and Buffer_[:indice] == []):
+        raise 1
+    # 0N RECULE
+    elif (sens == -1):
+        indice -= 1
+        return Buffer_[indice]
+    # SI BUFFER N EST PAS VIDE
+    elif len(Buffer_[indice:]) > 0:
+        return_value = Buffer_[indice]
+        indice += 1
         return return_value
+
+    # SI BUFFER EST VIDE
+    sc.motor12(1)
     Buffer_ = [[3,0,0]]
-    while ((not sc.code_exit(Buffer_[len(Buffer_)-1])) and len(Buffer_) < BUFFERSIZE):
+    if_while = 1
+    while ((not sc.code_exit(Buffer_[len(Buffer_)-1])) and len(Buffer_) * if_while < BUFFERSIZE):
         if Buffer_[0][0] == 3:
             Buffer_ = []
         cmd = get_cmd(sensor)
-        Buffer_.append(cmd)
-    return_value = sc.format_command(Buffer_[0])
-    Buffer_ = Buffer_[1:len(Buffer_)]
+        Buffer_.append(sc.format_command(cmd))
+        if Buffer_[len(Buffer_)-1] == 0 or 1:
+            if_while = -1
+    indice = 0
     sc.motor12(0)  # arrete les moteurs
-    return return_value
+    ######################
+
+    return read_program(sensor)
 
 def back(sensor, count):
     while count > 2:

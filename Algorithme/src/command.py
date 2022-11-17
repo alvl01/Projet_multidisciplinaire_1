@@ -131,3 +131,10 @@ class Command():
     def fbrosse_in_hand(self):
         print("brosse in hand")
         self.last_command = [12, self.negation]
+    # UNCALLABLE FUNCTION
+    def dc_motor_34(self, intensity):
+        pass
+    def servo_12(self, angle):
+        pass
+    def lauch_sound(self, title):
+        pass

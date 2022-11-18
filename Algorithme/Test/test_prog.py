@@ -26,6 +26,7 @@ def return_test(nb):
     print(sensor)
     #print(sensor)
     cmd = Command();
+    cmd.var[7] = 0
     a = prog.interpret_program(cmd, sensor)
     b = cmd.last_command
     del cmd
@@ -34,7 +35,7 @@ def return_test(nb):
     return b
 
 class TestProg(unittest.TestCase):
-    def test_read_prog(self):
+    """def test_read_prog(self):
         test = []
         test.append(0)
         test.append(26)
@@ -46,7 +47,7 @@ class TestProg(unittest.TestCase):
             prog.sc.test_again()
             prog.buffer_again()
             del cmd
-            self.assertEqual(a,i)
+            self.assertEqual(a,i)"""
     def test_interpret_prog(self):
         # TEST 1
         print("########################")
@@ -55,6 +56,7 @@ class TestProg(unittest.TestCase):
         nb = [ 8, 7, 26]
         a = return_test(nb)
         self.assertEqual(a,[7,0])
+
         # TEST 2
         print("########################")
         print("######## TEST 2 ########")
@@ -62,6 +64,7 @@ class TestProg(unittest.TestCase):
         nb = [0, 5, 8, 26, 8, 26, 26]
         a = return_test(nb)
         self.assertEqual(a,[8,0])
+
         # TEST 3
         print("########################")
         print("######## TEST 3 ########")
@@ -86,5 +89,12 @@ class TestProg(unittest.TestCase):
         a = return_test(nb)
         self.assertEqual(a,[8,1])
 
+        # TEST 6
+        print("########################")
+        print("######## TEST 6 ########")
+        print("########################")
+        nb = [6, 0, 5, 7, 26, 1, 5, 8, 26, 5, 8, 26, 26, 8, 26]
+        a = return_test(nb)
+        self.assertEqual(a,[8,1])
 if __name__ == '__main__':
     unittest.main()

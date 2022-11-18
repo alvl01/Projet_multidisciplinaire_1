@@ -71,7 +71,7 @@ def read_program(sensor, cmd, sens=1):
     retourne une liste de 0 et de 1
     """
     global indice, Buffer_, BUFFERSIZE
-
+    print(Buffer_)
     # ERROR ON ESSAYE DE RECULER ALORS QUE LA LISTE EST VIDE
     if (sens == -1 and Buffer_[:indice] == []):
         raise 1
@@ -83,7 +83,6 @@ def read_program(sensor, cmd, sens=1):
     elif len(Buffer_[indice:]) > 0:
         return_value = Buffer_[indice]
         indice += 1
-        #print(return_value)
         return return_value
     # SI BUFFER EST VIDE
     sc.motor12(1)
@@ -95,18 +94,25 @@ def read_program(sensor, cmd, sens=1):
         Buffer_.append(sc.get_cmd(sensor))
         if Buffer_[-1] <= 1:
             if_while = -1
+            if not 0 in Buffer_[:-1] and not 1 in Buffer_[:-1]:
+                Buffer_ = Buffer_[-1:]
     indice = 0
     sc.motor12(0)  # arrete les moteurs
     ######################
     return read_program(sensor, cmd)
 
 def back(sensor, cmd, count):
-    while count > 2:
-         count -= 1
-         Buffer_ = read_program(sensor, cmd, -1)
-    del Buffer_
+    global indice, Buffer_
+    if indice >= len(Buffer_) - 1:
+        indice = 0
+    else:
+        indice -= count
 
 def skip(sensor, cmd):
+    """
+    cette fonction permet de passer du code, quand if ou while est false
+    """
+    global indice, Buffer_
     command = read_program(sensor, cmd)
     count = 1
     count_end = 1
@@ -116,7 +122,8 @@ def skip(sensor, cmd):
             count_end -= 1
         elif command == 0 or command == 1:
             count_end += 2
-        command = read_program(sensor, cmd)
+        if Buffer_[indice:] != []:
+            command = read_program(sensor, cmd)
     command = read_program(sensor, cmd, -1)
     return count - 1
 def buffer_again():
@@ -148,6 +155,7 @@ def interpret_program(cmd, sensor):
             count += count_bool
             while (verif):
                 while_count = interpret_program(cmd, sensor)
+                print(while_count + count_bool)
                 back(sensor, cmd, while_count + count_bool)
                 verif, count_bool = Boolean_find(cmd, sensor)
             count += skip(sensor, cmd)

@@ -49,6 +49,7 @@ class Command():
     def fmusic(self):
         print("music : {0}".format(self.var[0]))
         self.last_command = [8, self.var[0]]
+        self._var[7] = 1
 
     def fbuton_onclick(self):
         print("buton_onclick : {0}".format(self.var[0]))

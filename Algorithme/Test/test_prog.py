@@ -23,7 +23,7 @@ def create_sensor(nb):
     return c
 def return_test(nb):
     sensor = create_sensor(nb)
-    print(sensor)
+    #print(sensor)
     #print(sensor)
     cmd = Command();
     cmd.var[7] = 0
@@ -31,7 +31,7 @@ def return_test(nb):
     b = cmd.last_command
     del cmd
     prog.sc.test_again()
-    print(nb)
+    #print(nb)
     return b
 
 class TestProg(unittest.TestCase):

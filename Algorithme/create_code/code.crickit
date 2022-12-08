@@ -1,14 +1,38 @@
-9 # tant que le bouton n'est pas enfoncer
-if 2 { # si la brosse est dedans
-not 2 # brosse pas dedans
+not brosse_in
+music1 #"prend ta brosse a dent"
+while hand_button_check
+{
+  hand_button_check
 }
-11 # attend que la brosse a dent soit sortie
-while not 12 { # tant que on remet pas la brosse a dent
-  if 10 and not 3 { # si une brosse a dent est detecter et que le dentifrisse n'ejecte rien
-    3 # ejecte dentifrisse
-  }
-  if not 10 and 3 { # l'inverse de la ligne haut
-    not 3
-  }
+while not capteur_distance_on
+{
+  music2 #"n'oublie pas le dentifrisse"
 }
-2 # rentre la brosse a dent
+while capteur_distance_on
+{
+  eject_dentifrisse
+}
+not eject_dentifrisse
+while not hand_button_check
+{
+  hand_button_check
+  timer
+}
+brosse_in
+not timer
+if timer
+{
+  pouce
+  lumiere # vert
+  music3 #"SUPER👌"
+  wait
+  not pouce
+}
+if not timer
+{
+  not pouce
+  not lumiere # rouge
+  music4 #"NUUUUUUUUUUUUUUL, tu vas avoir des carries"
+  wait
+  pouce
+}

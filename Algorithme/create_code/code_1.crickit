@@ -1,0 +1,13 @@
+9 # tant que le bouton n'est pas enfoncer
+if 2 { # si la brosse est dedans
+not 2 # brosse pas dedans
+}
+11 # attend que la brosse a dent soit sortie
+while not 12 { # tant que on remet pas la brosse a dent
+  if 10 and not 3 { # si une brosse a dent est detecter et que le dentifrisse n'ejecte rien
+    3 # ejecte dentifrisse
+  }
+  if not 10 and 3 { # l'inverse de la ligne haut
+    not 3
+  }
+}

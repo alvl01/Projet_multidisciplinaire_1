@@ -1,4 +1,5 @@
 command = []
+import time
 def create_sensor(nb):
     c = []
     for n in nb:
@@ -22,6 +23,7 @@ with open("code.crickit") as f:
             print(line)
             indice = 0
             indice_start = 0
+            line += " "
             for i in line:
                 if i == "{" or i == "}":
                     command.append("end")
@@ -37,28 +39,29 @@ with open("code.crickit") as f:
                         indice_start = indice
 command_nbr = []
 print(command)
+liste_command = ["if","while","brosse_in","eject_dentifrisse","lumiere","not","pouce","timer","hand_button_check","capteur_distance_on","wait","music1","music2","music3","music4","and","or","","","","","","","","","","end"]
 for cmd in command:
-    if (cmd == "if"):
-        command_nbr.append(0)
-    elif(cmd == "while"):
-        command_nbr.append(1)
-    elif(cmd == "not"):
-        command_nbr.append(5)
-    elif(cmd == "and"):
-        command_nbr.append(15)
-    elif(cmd == "or"):
-        command_nbr.append(16)
-    elif(cmd == "end"):
-        command_nbr.append(26)
-    else:
-        command_nbr.append(int(cmd))
-
+        for i in range(0,len(liste_command)):
+            a = (i if cmd == liste_command[i] else -1)
+            if a >= 0:
+                command_nbr.append(a)
+                break
 bande = create_sensor(command_nbr)
+for i in range(0,len(bande)-3):
+    print(bande[i])
+    if (bande[i+1] == "white"):
+        if bande[i] != "red" and bande[i+2] != "red":
+            bande[i+1] = "red"
+        elif bande[i] != "green" and bande[i+2] != "green":
+            bande[i+1] = "green"
+        else:
+            bande[i+1] = "blue"
+print(command_nbr)
 del command
 del command_nbr
 
 
-with open("code.bande",'w',encoding = 'utf-8') as f:
+with open("code_"+str(int(time.time())%1000000)+".bande",'w',encoding = 'utf-8') as f:
     i = 0
     for line in bande:
         i += 1

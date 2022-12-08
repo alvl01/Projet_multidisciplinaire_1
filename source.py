@@ -1,4 +1,5 @@
-from adafruit_crickit import crickit
+#import adafruit_tcs34725
+#from adafruit_crickit import crickit
 ntnst = 0
 indice = -1
 def format_command(liste: any):
@@ -34,82 +35,91 @@ def exec_simple_command(cmd, cmd_i):
         cmd.var[0] = 1
         return
     if (cmd_i == 2):
-        cmd.brosse_in()
+        cmd.fbrosse_out()
     elif (cmd_i == 3):
-        cmd.eject_dentifrisse()
+        cmd.feject_dentifrisse()
     elif (cmd_i == 4):
-        cmd.lumiere()
+        cmd.flumiere()
     elif (cmd_i == 6):
-        cmd.pouce()
+        cmd.fpouce()
     elif (cmd_i == 7):
-        cmd.timer()
+        cmd.ftimer()
     elif (cmd_i == 8):
-        cmd.hand_button_check()
+        cmd.fmusic()
     elif (cmd_i == 9):
-        cmd.capteur_distance_on()
+        cmd.fbuton_onclick()
     elif (cmd_i == 10):
-        cmd.wait()
+        cmd.fbrosse_detect()
     elif (cmd_i == 11):
-        cmd.music1()
-    elif (cmd_i == 12):
-        cmd.music2()
-    elif (cmd_i == 13):
-        cmd.music3()
-    elif (cmd_i == 14):
-        cmd.music4()
+        cmd.fwait()
     cmd.var[0] = 0
 
 def get_cmd(sensor):
     cmd = []
     colors = get_color(sensor)
     while len(cmd) < 3:
-        last_colors = colors
-        while colors == last_colors: # tant qu on est sur du blanc
+        while colors == "white": # tant qu on est sur du blanc
             colors = get_color(sensor)  # recupère les couleurs
         # on est plus sur du blanc
-        cmd.append(colors)
-        while colors == cmd[-1]:  # tant qu'on est sur du blanc
+        if colors == "red":
+            cmd.append(0)
+        elif colors == "green":
+            cmd.append(1)
+        elif colors == "blue":
+            cmd.append(2)
+        while colors == "red" or colors == "blue" or colors == "green":  # tant qu'on est sur du blanc
             colors = get_color(sensor)  # recupère les couleurs
         # on est plus sur de la couleur
     command = format_command(cmd)
     del cmd
     return command
 
+def error_music():
+	###
+	# execute une serie du signaux alarmant permetant a l'utilisateur de comprendre qu'il a fait une erreur
+	###
+	pass
+
 def get_color(sensor):
-    global last_colors
+    global ntnst,indice
+    indice += ntnst
+    return sensor[indice]
+def test_again():
+    global indice
+    indice = -1
+def motor12(intensity):
+    global ntnst
+    ntnst = intensity
+"""
+def get_color(sensor):
     color = sensor.color_rgb_bytes
     while (color[0] == 0 and color[1] == 0 and color[2] == 0):
         color = sensor.color_rgb_bytes
     red = color[0] * 10
     green = color[1] * 10
-    blue = color[2] * 10
+    blue = color[2] * 5
+    median = ((red+1) * green * blue)**(1/3)
+    valeur = 40
     count = 0
-    txt_color=-1
-    if red > blue and red > green:
-        txt_color = 0
-    elif green > blue and red < green:
-        txt_color = 1
-    else:
-        txt_color = 2
-    last_colors.append(txt_color)
-    if len(last_colors) > 11:
-        last_colors[1:]
-    count = []
-    count.append(0)
-    count.append(0)
-    count.append(0)
-    for i in last_colors:
-            count[i] += 1
-    if count[0] > count[1] and count[0] > count[2]:
-        return 0
-    if count[1] > count[0] and count[1] > count[2]:
-        return 1
-    del count
-    return 2
-    #print (str(median)+" "+str(red)+" "+str(green)+" "+str(blue)+" "+str(txt_color))
+    txt_color=""
+    for col in color:
+        if col - median > valeur:
+            count += 1
+    if count > 1:
+        txt_color = "white";
+    elif red - median > valeur:
+        txt_color = "red"
+    elif green - median > valeur:
+        txt_color = "green"
+    elif blue - median > valeur:
+        txt_color = "blue"
+    print (str(red)+" "+str(green)+" "+str(blue)+" "+txt_color)
+    return txt_color
 def motor12(intensity):
     global ntnst
-    """
+    """"""
     Lance ou arrète les moteurs en fonction de intensity
-    """
+    """"""
     crickit.dc_motor_1.throttle = intensity
+    crickit.dc_motor_2.throttle = intensity
+"""

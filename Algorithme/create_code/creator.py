@@ -39,7 +39,7 @@ with open("code.crickit") as f:
                         indice_start = indice
 command_nbr = []
 print(command)
-liste_command = ["if","while","brosse_in","eject_dentifrisse","lumiere","not","pouce","timer","hand_button_check","capteur_distance_on","wait","music1","music2","music3","music4","and","or","","","","","","","","","","end"]
+liste_command = ["if","while","brosse_in","eject_dentifrisse","lumiere","not","pouce","timer","hand_button_check","button_dentifrice","wait","music1","music2","music3","music4","and","or","final","","","","","","","","","end"]
 for cmd in command:
         for i in range(0,len(liste_command)):
             a = (i if cmd == liste_command[i] else -1)

@@ -1,6 +1,6 @@
 liste_command = ["if","while","brosse_in","eject_dentifrisse","lumiere",
 "pouce","timer","music4","hand_button_check","capteur_distance_on","wait"
-,"music1","music2","music3","and","or","","","","","","","","","","}"]
+,"music1","music2","music3","and","or","final","","","","","","","","","}"]
 not brosse_in
 music1 #"prend ta brosse a dent"
 while hand_button_check

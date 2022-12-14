@@ -1,19 +1,20 @@
 import time
-from adafruit_crickit import crickit
 def read_program(sensor):
     """
     algorithme permetant de lire la bande
     retourne une liste de nombre tous < 3^3 = 27
     """
     # SI BUFFER EST VIDE
-    motor12(1)
+    sc.motor12(1)
     Buf = []
     Buf.append(get_cmd(sensor))
-    while not code_exit(Buf[-1]):
+    exit_nbr = 1
+    while not code_exit(exit_nbr, Buffer_[-1]):
         Buf.append(get_cmd(sensor))
     motor12(0)  # arrete les moteurs
     ######################
     return Buf
+
 def format_command(liste: any):
     """
     recoit une liste de nombre
@@ -24,12 +25,10 @@ def format_command(liste: any):
     n += 3 * liste[1] + 9 * liste[2]
     return n
 
-end = 1
-def code_exit(el):
+def code_exit(end, el):
     """
     Retourne un TRUE ou FALSE en fonction de el
     """
-    global end
     if el <= 1:
         end += 2
     elif el == 26:
@@ -74,4 +73,3 @@ def motor12(intensity):
     Lance ou arrète les moteurs en fonction de intensity
     """
     crickit.dc_motor_1.throttle = intensity
-    crickit.dc_motor_2.throttle = intensity

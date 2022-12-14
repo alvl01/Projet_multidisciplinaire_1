@@ -1,77 +1,33 @@
-not brosse_in
-music1 #"prend ta brosse a dent"
+brosse_in
 while hand_button_check
 {
   hand_button_check
 }
-music2 #"n'oublie pas le dentifrisse"
+not brosse_in
+hand_button_check
 if button_dentifrice
 {
   eject_dentifrisse
 }
-while not hand_button_check
-{
-  hand_button_check
-  timer
-}
+timer
 brosse_in
-not timer
 final
 
-19
-13
-22
-15
-10
-1
-9
-1
-7
-14
-22
-0
-25
-1
-15
-19
-10
-1
-9
-11
-1
-12
-19
-11
-25
-26
-
-Code stopped by auto-reload. Reloading soon.
-redémarrage logiciel
-
-Auto-chargement activé. Copiez ou sauvegardez les fichiers via USB pour les lancer ou démarrez le REPL pour le désactiver.
-code.py sortie :
 5
 2
-11
 1
 8
 26
 8
 26
-12
+2
 0
 9
 26
 3
 26
-1
-5
-8
-26
-8
 7
-26
+5
 2
-5
-7
-0
+25
+26
